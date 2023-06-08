@@ -5,6 +5,8 @@ import { useEffect } from 'react'
 const Quotes = () => {
   const [quotes, setQuotes] = useState([])
   const [randomNumber, setRandomNumber] = useState(0)
+  const [bgColour, setBgColour] = useState()
+  const [fadeIn, setFadeIn] = useState(false)
 
   useEffect(() => {
     const fetchFiftyQuotes = async () => {
@@ -50,16 +52,31 @@ const Quotes = () => {
   const generateRandomNumber = () => {
     const randomNumber = Math.floor(Math.random() * quotes.length)
     setRandomNumber(randomNumber)
+    setBgColour(changeColour)
+  }
+
+  const changeColour = () => {
+    const hexValue = Math.floor(Math.random() * 0xffffff).toString(16)
+    return hexValue
+  }
+
+  const animateFadeIn = () => {
+    setFadeIn(true)
+
+    setTimeout(() => setFadeIn(false), 2000)
   }
   
   return (
-    <div>
-      <p>{updateQuoteText(randomNumber)}</p>
-      <span>{updateAuthorText(randomNumber)}</span>
-      <div>
-        <button onClick={generateRandomNumber}>New Quote</button>
+    <section style={{background: `#${bgColour}`}} className='quotes-body'>
+      <div className='quotes-container'>
+        <p style={{color: `#${bgColour}`}} className={`quote-text ${fadeIn ? 'fadeIn' : null}`}>{`"${updateQuoteText(randomNumber)}`}</p>
+        <span style={{color: `#${bgColour}`}} className='quote-author'>{`- ${updateAuthorText(randomNumber)}`}</span>
+        <div className='btn-container'>
+          <button style={{background: `#${bgColour}`}} className="btn-new-quote" onClick={() => {generateRandomNumber(); animateFadeIn()}}>New Quote</button>
+        </div>
       </div>
-    </div>
+    </section>
+    
   )
 }
 
